@@ -44,7 +44,7 @@ var vuexScrollMixin = exports.vuexScrollMixin = {
   mounted: function mounted() {
     var _this = this;
 
-    if (this.$store) throw new Error('This plugin requires a Vuex store');
+    if (!this.$store) throw new Error('This plugin requires a Vuex store');
     var scrollEvents = new _scrollEvents2.default();
     var update = function update(status) {
       _this.$store.commit('vuexScroll/update', {
