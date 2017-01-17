@@ -26,25 +26,20 @@ export const vuexScroll = {
 
 
 export const vuexScrollMixin = {
-  install (Vue, options = {}) {
-    Vue.mixin({
-      mounted () {
-        if (this.$store) throw new Error('This plugin requires a Vuex store')
-        const el = options.el || window
-        const scrollEvents = new ScrollEvents(el)
-        const update = (status) => {
-          this.$store.commit('vuexScroll/update', {
-            status,
-            progress: scrollEvents.y,
-            direction: scrollEvents.directionY,
-            speed: scrollEvents.speedY
-          })
-        }
+  mounted () {
+    if (this.$store) throw new Error('This plugin requires a Vuex store')
+    const scrollEvents = new ScrollEvents()
+    const update = (status) => {
+      this.$store.commit('vuexScroll/update', {
+        status,
+        progress: scrollEvents.y,
+        direction: scrollEvents.directionY,
+        speed: scrollEvents.speedY
+      })
+    }
 
-        scrollEvents.on('scroll:start', () => update('start'))
-        scrollEvents.on('scroll:progress', () => update('progress'))
-        scrollEvents.on('scroll:stop', () => update('stop'))
-      }
-    })
+    scrollEvents.on('scroll:start', () => update('start'))
+    scrollEvents.on('scroll:progress', () => update('progress'))
+    scrollEvents.on('scroll:stop', () => update('stop'))
   }
 }

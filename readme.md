@@ -6,16 +6,27 @@ This library packs some helpers to keep scroll state in your Vuex store. It uses
 
 ## Usage
 
-This lib comes with 2 helpers—a Vue plugin and a Vuex plugin. Use them both to get started. _(N.B. `vuex-scroll` only supports scrolling on `window` at this time. See below for roadmap)_
+This lib comes with 2 helpers—a Vue mixin and a Vuex plugin. Use them both to get started. _(N.B. `vuex-scroll` only supports scrolling on `window` at this time. See below for roadmap)_
+
+_index.js_
+```js
+import Vue from 'vue'
+import { vuexScrollMixin} from 'vuex-store'
+...
+
+export new Vue({
+  mixins: [vuexScrollMixin],
+  ...
+})
+```
 
 _store/index.js_
 ```js
 import Vue from 'vue'
 import Vuex from 'vuex'
-import { vuexScroll, vuexScrollMixin } from 'vuex-store'
+import { vuexScroll } from 'vuex-store'
 
 Vue.use(Vuex)
-Vue.use(vuexScrollMixin)
 
 ...
 
