@@ -30,7 +30,7 @@ export const vuexScrollMixin = opts => ({
   mounted () {
     if (!this.$store) throw new Error('This plugin requires a Vuex store')
     const scrollEvents = new ScrollEvents()
-    const update = (status) => {
+    const u = (status) => {
       this.$store.commit('vuexScroll/update', {
         status,
         progress: scrollEvents.y,
@@ -38,11 +38,11 @@ export const vuexScrollMixin = opts => ({
         speed: scrollEvents.speedY
       })
     }
-    const delay = opts.delay || 200
-    const sensibleUpdate = debounce(update, delay)
+    const delay = typeof opts.delay === 'undefined' ? 200 : opts.delay
+    const update = opts.delay === 0 || opts.delay === false ? u : debounce(u, delay)
 
-    scrollEvents.on('scroll:start', () => sensibleUpdate('start'))
-    scrollEvents.on('scroll:progress', () => sensibleUpdate('progress'))
-    scrollEvents.on('scroll:stop', () => sensibleUpdate('stop'))
+    scrollEvents.on('scroll:start', () => update('start'))
+    scrollEvents.on('scroll:progress', () => update('progress'))
+    scrollEvents.on('scroll:stop', () => update('stop'))
   }
 })
