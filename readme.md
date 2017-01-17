@@ -12,10 +12,13 @@ _index.js_
 ```js
 import Vue from 'vue'
 import { vuexScrollMixin} from 'vuex-store'
+const scrollMixin = vuexScrollMixin({
+  delay: 100 // Debounce delay    
+})
 ...
 
 export new Vue({
-  mixins: [vuexScrollMixin],
+  mixins: [scrollMixin],
   ...
 })
 ```
@@ -42,16 +45,27 @@ Once you've included both, you should have a module in your Vuex store which loo
 ```js
 {
   vuexScroll: {
-    direction:null
-    progress:null
-    speed:null
-    status:null
+    direction: null // 1 or -1
+    progress: null // Y distance in px
+    speed: null // Number representing speed
+    status: null // start, stop or progress
   }
 }
 
 ```
 
 Inject this into your components to get reactive updates when the window scrolls (see: https://vuex.vuejs.org/en/modules.html)
+
+_component.vue
+```js
+import 'mapState' from 'vuex'
+
+export default {
+  computed: {
+    ...mapState('vuexScroll', ['progress'])
+  }
+}
+```
 
 ## Todo
 

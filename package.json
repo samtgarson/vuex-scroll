@@ -1,6 +1,6 @@
 {
   "name": "vuex-scroll",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Keep vuex state updated with scroll stats",
   "main": "index.js",
   "repository": "samtgarson/vuex-scroll",
@@ -20,9 +20,12 @@
   "xo": {
     "extends": "samtgarson",
     "env": "browser",
-    "ignore": ["index.js"]
+    "ignore": [
+      "index.js"
+    ]
   },
   "dependencies": {
+    "debounce": "^1.0.0",
     "scroll-events": "^1.1.3"
   }
 }

@@ -9,6 +9,10 @@ var _scrollEvents = require('scroll-events');
 
 var _scrollEvents2 = _interopRequireDefault(_scrollEvents);
 
+var _debounce = require('debounce');
+
+var _debounce2 = _interopRequireDefault(_debounce);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var state = {
@@ -40,29 +44,33 @@ var vuexScroll = exports.vuexScroll = {
   mutations: mutations
 };
 
-var vuexScrollMixin = exports.vuexScrollMixin = {
-  mounted: function mounted() {
-    var _this = this;
+var vuexScrollMixin = exports.vuexScrollMixin = function vuexScrollMixin(opts) {
+  return {
+    mounted: function mounted() {
+      var _this = this;
 
-    if (!this.$store) throw new Error('This plugin requires a Vuex store');
-    var scrollEvents = new _scrollEvents2.default();
-    var update = function update(status) {
-      _this.$store.commit('vuexScroll/update', {
-        status: status,
-        progress: scrollEvents.y,
-        direction: scrollEvents.directionY,
-        speed: scrollEvents.speedY
+      if (!this.$store) throw new Error('This plugin requires a Vuex store');
+      var scrollEvents = new _scrollEvents2.default();
+      var update = function update(status) {
+        _this.$store.commit('vuexScroll/update', {
+          status: status,
+          progress: scrollEvents.y,
+          direction: scrollEvents.directionY,
+          speed: scrollEvents.speedY
+        });
+      };
+      var delay = opts.delay || 200;
+      var sensibleUpdate = (0, _debounce2.default)(update, delay);
+
+      scrollEvents.on('scroll:start', function () {
+        return sensibleUpdate('start');
       });
-    };
-
-    scrollEvents.on('scroll:start', function () {
-      return update('start');
-    });
-    scrollEvents.on('scroll:progress', function () {
-      return update('progress');
-    });
-    scrollEvents.on('scroll:stop', function () {
-      return update('stop');
-    });
-  }
+      scrollEvents.on('scroll:progress', function () {
+        return sensibleUpdate('progress');
+      });
+      scrollEvents.on('scroll:stop', function () {
+        return sensibleUpdate('stop');
+      });
+    }
+  };
 };

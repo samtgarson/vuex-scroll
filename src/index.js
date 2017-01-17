@@ -1,4 +1,5 @@
 import ScrollEvents from 'scroll-events'
+import debounce from 'debounce'
 
 const state = {
   progress: null,
@@ -25,7 +26,7 @@ export const vuexScroll = {
 }
 
 
-export const vuexScrollMixin = {
+export const vuexScrollMixin = opts => ({
   mounted () {
     if (!this.$store) throw new Error('This plugin requires a Vuex store')
     const scrollEvents = new ScrollEvents()
@@ -37,9 +38,11 @@ export const vuexScrollMixin = {
         speed: scrollEvents.speedY
       })
     }
+    const delay = opts.delay || 200
+    const sensibleUpdate = debounce(update, delay)
 
-    scrollEvents.on('scroll:start', () => update('start'))
-    scrollEvents.on('scroll:progress', () => update('progress'))
-    scrollEvents.on('scroll:stop', () => update('stop'))
+    scrollEvents.on('scroll:start', () => sensibleUpdate('start'))
+    scrollEvents.on('scroll:progress', () => sensibleUpdate('progress'))
+    scrollEvents.on('scroll:stop', () => sensibleUpdate('stop'))
   }
-}
+})
