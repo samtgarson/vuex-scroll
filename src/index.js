@@ -9,11 +9,11 @@ const state = {
 
 /* eslint-disable no-param-reassign */
 const mutations = {
-  update (s, { status, event }) {
+  update (s, { status, progress, direction, speed }) {
     s.status = status
-    s.progress = event.x
-    s.direction = event.directionY
-    s.speed = event.speedY
+    s.progress = progress
+    s.direction = direction
+    s.speed = speed
   }
 }
 /* eslint-enable no-param-reassign */
@@ -24,18 +24,26 @@ export const vuexScroll = {
   mutations
 }
 
+
 export const vuexScrollMixin = {
   install (Vue, options = {}) {
-    if (!Vue.$store) throw new Error('This plugin requires a Vuex store')
     Vue.mixin({
       mounted () {
+        if (this.$store) throw new Error('This plugin requires a Vuex store')
         const el = options.el || window
-        const scrollEvents = ScrollEvents.new(el)
-        const update = (status, event) => this.$store.commit('vuexScroll/update', { status, event })
+        const scrollEvents = new ScrollEvents(el)
+        const update = (status) => {
+          this.$store.commit('vuexScroll/update', {
+            status,
+            progress: scrollEvents.y,
+            direction: scrollEvents.directionY,
+            speed: scrollEvents.speedY
+          })
+        }
 
-        scrollEvents.on('scroll:start', e => update('start', e))
-        scrollEvents.on('scroll:progress', e => update('progress', e))
-        scrollEvents.on('scroll:stop', e => update('stop', e))
+        scrollEvents.on('scroll:start', () => update('start'))
+        scrollEvents.on('scroll:progress', () => update('progress'))
+        scrollEvents.on('scroll:stop', () => update('stop'))
       }
     })
   }

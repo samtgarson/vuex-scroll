@@ -22,12 +22,14 @@ var state = {
 var mutations = {
   update: function update(s, _ref) {
     var status = _ref.status,
-        event = _ref.event;
+        progress = _ref.progress,
+        direction = _ref.direction,
+        speed = _ref.speed;
 
     s.status = status;
-    s.progress = event.x;
-    s.direction = event.directionY;
-    s.speed = event.speedY;
+    s.progress = progress;
+    s.direction = direction;
+    s.speed = speed;
   }
 };
 /* eslint-enable no-param-reassign */
@@ -42,25 +44,30 @@ var vuexScrollMixin = exports.vuexScrollMixin = {
   install: function install(Vue) {
     var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
-    if (!Vue.$store) throw new Error('This plugin requires a Vuex store');
     Vue.mixin({
       mounted: function mounted() {
         var _this = this;
 
+        if (this.$store) throw new Error('This plugin requires a Vuex store');
         var el = options.el || window;
-        var scrollEvents = _scrollEvents2.default.new(el);
-        var update = function update(status, event) {
-          return _this.$store.commit('vuexScroll/update', { status: status, event: event });
+        var scrollEvents = new _scrollEvents2.default(el);
+        var update = function update(status) {
+          _this.$store.commit('vuexScroll/update', {
+            status: status,
+            progress: scrollEvents.y,
+            direction: scrollEvents.directionY,
+            speed: scrollEvents.speedY
+          });
         };
 
-        scrollEvents.on('scroll:start', function (e) {
-          return update('start', e);
+        scrollEvents.on('scroll:start', function () {
+          return update('start');
         });
-        scrollEvents.on('scroll:progress', function (e) {
-          return update('progress', e);
+        scrollEvents.on('scroll:progress', function () {
+          return update('progress');
         });
-        scrollEvents.on('scroll:stop', function (e) {
-          return update('stop', e);
+        scrollEvents.on('scroll:stop', function () {
+          return update('stop');
         });
       }
     });

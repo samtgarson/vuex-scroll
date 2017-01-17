@@ -14,11 +14,13 @@
     "xo": "^0.17.1"
   },
   "scripts": {
-    "test": "xo"
+    "test": "xo",
+    "build": "babel src --out-dir ."
   },
   "xo": {
     "extends": "samtgarson",
-    "env": "browser"
+    "env": "browser",
+    "ignore": ["index.js"]
   },
   "dependencies": {
     "scroll-events": "^1.1.3"
