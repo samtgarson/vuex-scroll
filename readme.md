@@ -11,9 +11,9 @@ This lib comes with 2 helpers—a Vue mixin and a Vuex plugin. Use them both to 
 _index.js_
 ```js
 import Vue from 'vue'
-import { vuexScrollMixin} from 'vuex-store'
+import { vuexScrollMixin } from 'vuex-scroll'
 const scrollMixin = vuexScrollMixin({
-  delay: 100 // Debounce delay    
+  delay: 100 // Debounce delay
 })
 ...
 
@@ -27,7 +27,7 @@ _store/index.js_
 ```js
 import Vue from 'vue'
 import Vuex from 'vuex'
-import { vuexScroll } from 'vuex-store'
+import { vuexScroll } from 'vuex-scroll'
 
 Vue.use(Vuex)
 
